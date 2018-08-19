@@ -1,5 +1,7 @@
 <html style="font-family: 'Open Sans', sans-serif;">
 <head>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<meta charset=utf-8 />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	<title>
 		FIRST TECH CHALLENGE Engineering Notebook Entry Manager
@@ -11,6 +13,20 @@
 		var year = d.getFullYear();
 		var today = month + "/" + date + "/" + year
 
+		$('textarea').on('keydown',function(e){
+		  var t = $(this);
+		  switch(e.which){
+    	case 17:
+    	  t.val(t.val()+'•');
+    	  return false;
+  		}  
+		});
+
+		function confirm() {
+			document.getElementById("main").hidden = true;
+			document.getElementById("rus").hidden = false;
+		}
+
 		function think() {
 			var name = document.getElementById("name").value;
 			var stime = document.getElementById("stime").value;
@@ -18,11 +34,11 @@
 			var subteam = document.getElementById("subteam").value;
 			var date = document.getElementById("date").value;
 			var attendees = "Student Attendees: "
-			console.log(name);
-			console.log(stime);
-			console.log(etime);
-			console.log(subteam);
-			console.log(date);
+			// console.log(name);
+			// console.log(stime);
+			// console.log(etime);
+			// console.log(subteam);
+			// console.log(date);
 			var title = "Meeting Minutes: "+date
 			var author = "Written By: "+name
 			var times = "Meeting Start: "+stime+" Meeting End: "+etime
@@ -36,7 +52,34 @@
 
 			var luisA = document.querySelector('.luis').checked
 			if (luisA != false) {attendees = attendees + "Luis  "}
-			console.log(title + "\n" + author + "\n" + times + "\n" + todaysdate + "\n" + attendees);
+
+			if (document.getElementById("agenda").value != "") {
+				var agenda = "Today our agenda was: " + "\n" + document.getElementById("agenda").value
+				// console.log(agenda)
+			} else {
+				
+			}
+
+			if (document.getElementById("discussion").value != "") {
+				var discussion = "Today we had a discussion about " + document.getElementById("discussionP").value + " and the results it will have on our robot and team: " + document.getElementById("discussion").value
+				// console.log(discussion)
+			} else {
+				
+			}
+
+			if (document.getElementById("breakthroughs").value != "") {
+				var breakthroughs = "Today we had a few breakthroughs: " + document.getElementById("breakthroughs").value
+				// console.log(breakthroughs)
+			} else {
+				
+			}
+
+
+			var finalR = title + "\n" + author + "\n" + times + "\n" + todaysdate + "\n" + attendees + "\n\n" + agenda + "\n\n" + discussion + "\n\n" + breakthroughs;
+			document.getElementById("reviewT").value = finalR
+
+			document.getElementById('rus').hidden = true
+			document.getElementById('review').hidden = false
 		}
 	</script>
 	<style>
@@ -161,7 +204,7 @@
 </head>
 <body>
 	<center>
-<div style="width:50%;">
+<div style="width:50%;" id="main">
 	
 		<input type="text" id="name" placeholder="Your Name">
 		<input type="text" id="stime" placeholder="Start time" style="width:46.4%"><span> through </span>
@@ -175,11 +218,30 @@
 			<input type="checkbox" id="jimmy" class="jimmy" checked><label for="jimmy" class="">Jimmy</label><br>
 			<input type="checkbox" id="luis" class="luis" checked><label for="luis" class="">Luis</label><br>
 		</form>
+		<textarea id="agenda" placeholder="What was the agenda (bullet-point format) (add bullet with alt + 8 on numpad" style="height:80px;"></textarea>
+		<input type="text" id="discussionP" placeholder="what was the purpose of today's discussion?">
 		<textarea id="discussion" placeholder="what was discussed today? (In sentence form)"></textarea>
 		<textarea id="breakthroughs" placeholder="Breakthroughs (if any), Please enter in sentence form"></textarea>
-		<button class="button" onclick="think()">submit</button>
+		<button class="button" onclick="confirm()">submit</button>
 	
 </div>
+
+<div id="rus" style="width: 90%;height: 90%;background-color: black;padding:none;border-style: none;" hidden>
+	<h1 style="color:white">Are you ready to submit?</h1>
+	<span style="color:white">You will be able to edit your entry before sending it off.</span>
+	<div style="height: 61%;background-color: black"></div>
+	<button class="button" onclick="document.getElementById('rus').hidden = true
+	document.getElementById('main').hidden = false
+	" style="background-color: red;">No</button><div style="background-color: black;height: .5%;"></div><button class="button" onclick="think()">Yes</button>
+</div>
+
+<div id="review" style="width:50%;" hidden>
+	<form action="actionpage.php" method="POST">
+	<textarea id="reviewT" style="height:80%" name="todaysEntry"></textarea>
+	<button class="button" type="submit">I approve!</button>
+	</form>
+</div>
+
 </center>
 </body>
 </html>
